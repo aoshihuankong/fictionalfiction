@@ -1,0 +1,10 @@
+spring:
+  redis:
+    # redis缓存配置信息
+    host: 39.108.37.4
+    port: 6379
+  datasource:
+    # mysql数据库配置信息
+    url: jdbc:mysql://39.108.37.4:3306/db_fictionalfiction
+    username: root
+    password: admin123!
