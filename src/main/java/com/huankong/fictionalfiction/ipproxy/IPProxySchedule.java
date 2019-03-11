@@ -22,8 +22,8 @@ public class IPProxySchedule implements ApplicationRunner {
     @Resource
     StringRedisTemplate stringRedisTemplate;
 
-    // 每隔一分钟执行一次
-    @Scheduled(cron = "0 0 0 * * ?")
+    // 每天早上一点执行一次
+    @Scheduled(cron = "0 0 1 * * ?")
     @Transactional
     public void ipProxyInit() {
         /*获取redis中的代理ip，并对其进行筛选*/
