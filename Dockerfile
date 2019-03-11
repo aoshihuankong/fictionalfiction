@@ -1,4 +1,3 @@
-#!/bin/bash -ilex
 FROM openjdk:8-jdk-alpine
 # Spring Boot 使用的内嵌 Tomcat 容器默认使用/tmp作为工作目录
 VOLUME /tmp
