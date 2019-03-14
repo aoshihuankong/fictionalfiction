@@ -1,9 +1,6 @@
 package com.huankong.fictionalfiction.bean;
 
-import org.springframework.context.annotation.Bean;
-
 import java.util.Objects;
-
 
 public class IPProxy {
     private String IPAddress;

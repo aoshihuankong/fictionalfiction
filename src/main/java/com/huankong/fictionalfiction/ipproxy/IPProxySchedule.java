@@ -3,22 +3,16 @@ package com.huankong.fictionalfiction.ipproxy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.huankong.fictionalfiction.bean.IPProxy;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
 
 @Component
-@EnableScheduling
-public class IPProxySchedule implements ApplicationRunner {
+public class IPProxySchedule {
     @Resource
     StringRedisTemplate stringRedisTemplate;
 
@@ -38,7 +32,7 @@ public class IPProxySchedule implements ApplicationRunner {
         //首先使用本机ip爬取代理网第一页,并和redis中的代理ip整合
         Set<IPProxy> ipProxyMessage = URLFecter.urlParse(ipProxySet);
 
-        //对得到的IP进行筛选，将IP速度在两秒以内的留下，其余删除
+        //对得到的IP进行筛选，将IP速度在三秒以内的留下，其余删除
         ipProxyMessage = IPFilter.filter(ipProxyMessage);
 
         //对拿到的ip进行质量检测，将质量不合格的ip在List里进行删除
@@ -48,10 +42,5 @@ public class IPProxySchedule implements ApplicationRunner {
         ipProxys = new Gson().toJson(ipProxyMessage);
         stringRedisTemplate.opsForValue().set("ipProxy", ipProxys);
         System.out.println("IP代理更新完成！");
-    }
-
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
-        ipProxyInit();
     }
 }

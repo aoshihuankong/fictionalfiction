@@ -25,7 +25,7 @@ public class IPFilter {
             ipSpeed = ipSpeed.substring(0, ipSpeed.indexOf('秒'));
             double Speed = Double.parseDouble(ipSpeed);
 
-            if (Speed <= 2.0) {
+            if (Speed <= 3.0) {
                 newipProxys.add(ipProxy);
             }
         }
@@ -46,10 +46,10 @@ public class IPFilter {
             HttpHost proxy = new HttpHost(ip, Integer.parseInt(port));
             RequestConfig config = RequestConfig.custom().setProxy(proxy).setConnectTimeout(5000).
                     setSocketTimeout(5000).build();
-            HttpGet httpGet = new HttpGet("https://www.baidu.com");
+            HttpGet httpGet = new HttpGet("https://sou.jiaston.com/search.aspx");
             httpGet.setConfig(config);
 
-            httpGet.setHeader("Accept", "text/javascript, application/javascript, application/ecmascript, application/x-ecmascript, */*; q=0.01");
+            httpGet.setHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
             httpGet.setHeader("Accept-Encoding", "gzip, deflate, br");
             httpGet.setHeader("Accept-Language", "zh-CN,zh;q=0.9");
             httpGet.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36");
