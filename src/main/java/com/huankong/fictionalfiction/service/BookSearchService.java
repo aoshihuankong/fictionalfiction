@@ -2,8 +2,9 @@ package com.huankong.fictionalfiction.service;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.huankong.fictionalfiction.bean.*;
 import com.huankong.fictionalfiction.bean.biquege.search.BiQueGeSearch;
+import com.huankong.fictionalfiction.bean.search.BookSearch;
+import com.huankong.fictionalfiction.bean.search.SearchData;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;

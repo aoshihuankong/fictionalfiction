@@ -1,4 +1,4 @@
-package com.huankong.fictionalfiction.bean;
+package com.huankong.fictionalfiction.bean.search;
 
 public class SearchData {
     private String id;

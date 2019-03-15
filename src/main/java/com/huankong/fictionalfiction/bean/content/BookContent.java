@@ -1,20 +1,9 @@
-package com.huankong.fictionalfiction.bean;
+package com.huankong.fictionalfiction.bean.content;
 
-import java.util.List;
-
-public class BookSearch {
-    private int tatol;
+public class BookContent {
     private int source;
     private String info;
-    private List<SearchData> data;
-
-    public int getTatol() {
-        return tatol;
-    }
-
-    public void setTatol(int tatol) {
-        this.tatol = tatol;
-    }
+    private ContentData data;
 
     public int getSource() {
         return source;
@@ -32,12 +21,11 @@ public class BookSearch {
         this.info = info;
     }
 
-    public List<SearchData> getData() {
+    public ContentData getData() {
         return data;
     }
 
-    public void setData(List<SearchData> data) {
+    public void setData(ContentData data) {
         this.data = data;
     }
 }
-
