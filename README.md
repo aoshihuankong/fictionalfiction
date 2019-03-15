@@ -21,10 +21,10 @@
 
 ### 四、报文设计
 1. 书籍搜索
-> {"tatol":"10","source":"1","info":"success","rows":[{"Id":"https://quapp.1122dh.com/info/146948.html","Name":"牧神记","Author":"宅猪","Img":"https://imgapi.jiaston.com/BookFiles/BookImages/mushenji.jpg","Desc":"大墟的祖训说，天黑，别出门。大墟残老村的老弱病残ink边捡到了一个婴儿，取名秦牧，含辛茹苦将他养大。这一天夜幕降临，黑暗笼罩大墟，秦牧走出了家门……做个春风中荡漾的反派吧！瞎子对他说。秦牧的反派之路，正在崛起！","LastChapterLink":"https://quapp.1122dh.com/book/146948/7456992.html","LastChapter":"第一四三三章 蒙面谁也不识君","LastTime":"2/12/2019 20:03:39","CName":"玄幻奇幻"}]}
+> {"tatol":1,"source":1,"info":"success","data":[{"id":"https://quapp.1122dh.com/info/212770.html","name":"纣临","author":"三天两觉","img":"https://imgapi.jiaston.com/BookFiles/BookImages/zhoulin.jpg","desc":"死而以行为谥。\n　　残义损善者，谓之纣。\n　　然，此恶谥之祖，实是文治武功，一代枭雄。\n　　比之无数上谥之庸才，又当如何？\n　　若纣为罪，罪当再临。\n　　当这第五王国再次腐朽之时，逆十字的旗帜自当再现。\n　　那旗下之恶才、罪徒……亦将再次掀起一场颠覆时代的狂潮。","lastChapterLink":"https://quapp.1122dh.com/book/212770/1368158.html","lastChapter":"祭者之章 四","lastTime":"2019-03-05 00:00:00","cName":"科幻灵异"}]}
 2. 书籍详情
-> {"source":"1","info":"success","data":[{"Id":"146948","Name":"牧神记","Author":"宅猪","Img":"https://imgapi.jiaston.com/BookFiles/BookImages/mushenji.jpg","Desc":"大墟的祖训说，天黑，别出门。大墟残老村的老弱病残们从江边捡到了一个婴儿，取名秦牧，含辛茹苦将他养大。这一天夜幕降临，黑暗笼罩大墟，秦牧走出了家门……做个春风中荡漾的反派吧！瞎子对他说。秦牧的反派之路，正在崛起！","FirstChapterId":7456992,"LastChapterId":7767374,"LastChapter":"第一四三三章 蒙面谁也不识君","LastTime":"2/12/2019 8:03:39 PM","CName":"玄幻奇幻"}]}
+> {"source":1,"info":"success","data":{"id":"https://quapp.1122dh.com/book/212770/","name":"纣临","author":"三天两觉","img":"https://imgapi.jiaston.com/BookFiles/BookImages/zhoulin.jpg","desc":"死而以行为谥。\r\n　　残义损善者，谓之纣。\r\n　　然，此恶谥之祖，实是文治武功，一代枭雄。\r\n　　比之无数上谥之庸才，又当如何？\r\n　　若纣为罪，罪当再临。\r\n　　当这第五王国再次腐朽之时，逆十字的旗帜自当再现。\r\n　　那旗下之恶才、罪徒……亦将再次掀起一场颠覆时代的狂潮。","firstChapterLink":"https://quapp.1122dh.com/book/212770/1110792.html","lastChapterLink":"https://quapp.1122dh.com/book/212770/1368633.html","lastChapter":"判官之章 四","lastTime":"2019-03-11 23:13:29","cName":"科幻灵异"}}
 3. 章节目录
-> {"source":"1","info":"success","data":[{"Id":6948,"Nme":"牧神记","chapters":[{"id":7456992,"name":"第一章 天黑别出门"},{"id":7456993,"name":"第二章 四灵血"}]}]}
+> {"source":1,"info":"success","data":{"id":212770,"name":"纣临","chapters":[{"id":"https://quapp.1122dh.com/book/212770/1110792.html","name":"序幕 十三个凶恶的联邦人"},{"id":"https://quapp.1122dh.com/book/212770/1110793.html","name":"第零章 罪徒"}]}}
 4. 章节内容
-> {"source":"1","info":"success","data":[{"Id":6948,"Nme":"牧神记","cid":7456992,"cname":"第一章 天黑别出门","pid":7745964,"nid":7456993,"content":"    天黑，别 这？”他心中纳闷。\f\t\n"}]}
+> {"source":1,"info":"success","data":{"id":"https://quapp.1122dh.com/book/212770/","name":"纣临","cid":"https://quapp.1122dh.com/book/212770/1110792.html","cname":"序幕 十三个凶恶的联邦人","pid":"","nid":"https://quapp.1122dh.com/book/212770/1110793.html","content":"他抹掉了嘴角的血渍"}}
