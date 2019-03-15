@@ -1,4 +1,4 @@
-package com.huankong.fictionalfiction.bean;
+package com.huankong.fictionalfiction.bean.chapter;
 
 public class ChapterChapters {
     private String id;

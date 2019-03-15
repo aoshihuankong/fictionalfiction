@@ -2,8 +2,10 @@ package com.huankong.fictionalfiction.service;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.huankong.fictionalfiction.bean.*;
 import com.huankong.fictionalfiction.bean.biquege.chapter.BiQueGeChapter;
+import com.huankong.fictionalfiction.bean.chapter.BookChapter;
+import com.huankong.fictionalfiction.bean.chapter.ChapterChapters;
+import com.huankong.fictionalfiction.bean.chapter.ChapterData;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;

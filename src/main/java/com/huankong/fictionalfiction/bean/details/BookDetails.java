@@ -1,4 +1,4 @@
-package com.huankong.fictionalfiction.bean;
+package com.huankong.fictionalfiction.bean.details;
 
 public class BookDetails {
     private int source;

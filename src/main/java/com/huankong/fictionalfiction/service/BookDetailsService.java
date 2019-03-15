@@ -2,8 +2,9 @@ package com.huankong.fictionalfiction.service;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.huankong.fictionalfiction.bean.*;
 import com.huankong.fictionalfiction.bean.biquege.details.BiQueGeDetails;
+import com.huankong.fictionalfiction.bean.details.BookDetails;
+import com.huankong.fictionalfiction.bean.details.DetailsData;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -14,6 +15,9 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 @Service
 public class BookDetailsService {
@@ -56,11 +60,13 @@ public class BookDetailsService {
                 bookDetails.getData().setFirstChapterLink("https://quapp.1122dh.com/book/" + biQueGeDetails.getData().getId() + "/" + biQueGeDetails.getData().getFirstChapterId() + ".html");
                 bookDetails.getData().setLastChapterLink("https://quapp.1122dh.com/book/" + biQueGeDetails.getData().getId() + "/" + biQueGeDetails.getData().getLastChapterId() + ".html");
                 bookDetails.getData().setLastChapter(biQueGeDetails.getData().getLastChapter());
-                bookDetails.getData().setLastTime(biQueGeDetails.getData().getLastTime());
+                bookDetails.getData().setLastTime(new SimpleDateFormat("yyyy-MM-dd H:mm:ss").format(new SimpleDateFormat("MM/d/yyyy K:m:s a",Locale.ENGLISH).parse(biQueGeDetails.getData().getLastTime()).getTime()));
                 bookDetails.getData().setcName(biQueGeDetails.getData().getCName());
                 return bookDetails;
             }
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
             e.printStackTrace();
         } finally {
             try {

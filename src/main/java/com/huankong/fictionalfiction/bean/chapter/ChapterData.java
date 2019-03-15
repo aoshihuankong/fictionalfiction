@@ -1,4 +1,4 @@
-package com.huankong.fictionalfiction.bean;
+package com.huankong.fictionalfiction.bean.chapter;
 
 import java.util.List;
 
