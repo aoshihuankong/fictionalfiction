@@ -1,4 +1,9 @@
 spring:
+  profiles:
+    active: prd
+---
+spring:
+  profiles: dev
   redis:
     # redis缓存配置信息
     host: 39.108.37.4
@@ -12,4 +17,19 @@ spring:
     # elasticsearch文档数据库配置信息
     jest:
       uris: http://39.108.37.4:9200
-
+---
+spring:
+  profiles: prd
+  redis:
+    # redis缓存配置信息
+    host: 127.0.0.1
+    port: 6379
+  datasource:
+    # mysql数据库配置信息
+    url: jdbc:mysql://127.0.0.1:3306/db_fictionalfiction
+    username: root
+    password: admin123!
+  elasticsearch:
+    # elasticsearch文档数据库配置信息
+    jest:
+      uris: http://127.0.0.1:9200
