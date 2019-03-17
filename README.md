@@ -31,3 +31,9 @@
 
 ### 五、后台开发
 > 详情看代码提交顺序
+
+### 六、后台部署
+* 参考资料：
+1. https://www.cnblogs.com/taomylife/p/7997814.html
+2. https://www.cnblogs.com/taomylife/p/7514875.html
+3. https://www.cnblogs.com/shamo89/p/9201513.html
