@@ -2,9 +2,14 @@ package com.huankong.fictionalfiction.service;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.huankong.fictionalfiction.bean.BookRequestBody;
 import com.huankong.fictionalfiction.bean.biquege.content.BiQueGeContent;
 import com.huankong.fictionalfiction.bean.content.BookContent;
 import com.huankong.fictionalfiction.bean.content.ContentData;
+import io.searchbox.client.JestClient;
+import io.searchbox.core.Index;
+import io.searchbox.core.Search;
+import io.searchbox.core.SearchResult;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -12,18 +17,53 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class BookContentService {
-    public BookContent bookContent(String url) {
-        // 查询该key是否有对应的小说
+    @Autowired
+    StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    private JestClient jestClient;
+
+    public BookContent bookContent(BookRequestBody bookRequestBody) {
+        String name = bookRequestBody.getName();
+        String url = bookRequestBody.getUrl();
+
+        // 先尝试从缓存中获取数据
+        String responseString = stringRedisTemplate.opsForValue().get(url);
+        if ("".equals(responseString)) {
+            // 如果缓存中存在则直接返回
+            return new Gson().fromJson(responseString, new TypeToken<BookContent>() {
+            }.getType());
+        }
+
+        // 再尝试从es中获取数据
+        String json = "{\"query\":{\"bool\":{\"filter\":{\"bool\":{\"must\":[{\"term\":{\"data.cid.keyword\":\"" + url + "\"}}]}}}}}";
+        Search search = new Search.Builder(json).addIndex("bookcontent").addType(name).build();
+        try {
+            SearchResult searchResult = jestClient.execute(search);
+
+            if (searchResult.getFirstHit(BookContent.class) != null) {
+                // 如果ES中存在本地数据，则直接返回
+                BookContent bookContent = searchResult.getFirstHit(BookContent.class).source;
+                // 先将数据保存在缓存中
+                stringRedisTemplate.opsForValue().set(bookRequestBody.getUrl(), new Gson().toJson(bookContent), 30 * 60, TimeUnit.SECONDS);
+                // 再返回数据
+                return bookContent;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // 如果缓存和ES中都没有数据，则调用第三方api
         CloseableHttpClient httpClient = HttpClients.createDefault();
         CloseableHttpResponse response = null;
 
-        String responseString = null;
         BookContent bookContent = new BookContent();
 
         RequestConfig config = RequestConfig.custom().setConnectTimeout(3000).
@@ -57,10 +97,29 @@ public class BookContentService {
                 bookContent.getData().setNid(biQueGeContent.getData().getNid() != -1 ? "https://quapp.1122dh.com/book/" + biQueGeContent.getData().getId() + "/" + biQueGeContent.getData().getNid() + ".html" : "");
                 bookContent.getData().setContent(biQueGeContent.getData().getContent());
 
+                // 先将数据保存在缓存中
+                stringRedisTemplate.opsForValue().set(url, new Gson().toJson(bookContent), 30 * 60, TimeUnit.SECONDS);
+                // 再将数据保存在ES中（最新章节不保存）
+                if (bookContent.getData().getNid().length() > 0) {
+                    Index index = new Index.Builder(bookContent).index("bookcontent").type(bookContent.getData().getName()).build();
+                    jestClient.execute(index);
+                }
+                // 最后返回数据
+                return bookContent;
+            } else {
+                bookContent.setData(new ContentData());
+                bookContent.setSource(1);
+                bookContent.setInfo("error");
+
                 return bookContent;
             }
         } catch (IOException e) {
             e.printStackTrace();
+            bookContent.setData(new ContentData());
+            bookContent.setSource(1);
+            bookContent.setInfo("error");
+
+            return bookContent;
         } finally {
             try {
                 if (httpClient != null) {
@@ -73,12 +132,5 @@ public class BookContentService {
                 e.printStackTrace();
             }
         }
-
-        bookContent = new BookContent();
-        bookContent.setData(new ContentData());
-        bookContent.setSource(1);
-        bookContent.setInfo(response.toString());
-
-        return bookContent;
     }
 }

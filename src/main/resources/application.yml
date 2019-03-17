@@ -8,3 +8,8 @@ spring:
     url: jdbc:mysql://39.108.37.4:3306/db_fictionalfiction
     username: root
     password: admin123!
+  elasticsearch:
+    # elasticsearch文档数据库配置信息
+    jest:
+      uris: http://39.108.37.4:9200
+

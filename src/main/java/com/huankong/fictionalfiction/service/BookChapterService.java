@@ -2,6 +2,7 @@ package com.huankong.fictionalfiction.service;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.huankong.fictionalfiction.bean.BookRequestBody;
 import com.huankong.fictionalfiction.bean.biquege.chapter.BiQueGeChapter;
 import com.huankong.fictionalfiction.bean.chapter.BookChapter;
 import com.huankong.fictionalfiction.bean.chapter.ChapterChapters;
@@ -13,20 +14,33 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class BookChapterService {
-    public BookChapter bookChapter(String url) {
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    public BookChapter bookChapter(BookRequestBody bookRequestBody) {
+        String url = bookRequestBody.getUrl();
+
+        String responseString = stringRedisTemplate.opsForValue().get(url);
+        if ("".equals(responseString)) {
+            return new Gson().fromJson(responseString, new TypeToken<BookChapter>() {
+            }.getType());
+        }
+
         // 查询该key是否有对应的小说
         CloseableHttpClient httpClient = HttpClients.createDefault();
         CloseableHttpResponse response = null;
 
-        String responseString = null;
         BookChapter bookChapter = new BookChapter();
 
         RequestConfig config = RequestConfig.custom().setConnectTimeout(3000).
@@ -66,10 +80,25 @@ public class BookChapterService {
                         bookChapter.getData().getChapters().add(chapterChapters);
                     }
                 }
+
+                // 先将数据保存在缓存中
+                stringRedisTemplate.opsForValue().set(url, new Gson().toJson(bookChapter), 30 * 60, TimeUnit.SECONDS);
+                // 最后返回数据
+                return bookChapter;
+            } else {
+                bookChapter.setData(new ChapterData());
+                bookChapter.setSource(1);
+                bookChapter.setInfo("error");
+
                 return bookChapter;
             }
         } catch (IOException e) {
             e.printStackTrace();
+            bookChapter.setData(new ChapterData());
+            bookChapter.setSource(1);
+            bookChapter.setInfo("error");
+
+            return bookChapter;
         } finally {
             try {
                 if (httpClient != null) {
@@ -82,12 +111,5 @@ public class BookChapterService {
                 e.printStackTrace();
             }
         }
-
-        bookChapter = new BookChapter();
-        bookChapter.setData(new ChapterData());
-        bookChapter.setSource(1);
-        bookChapter.setInfo(response.toString());
-
-        return bookChapter;
     }
 }

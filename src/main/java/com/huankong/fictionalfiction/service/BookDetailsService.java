@@ -2,6 +2,7 @@ package com.huankong.fictionalfiction.service;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.huankong.fictionalfiction.bean.BookRequestBody;
 import com.huankong.fictionalfiction.bean.biquege.details.BiQueGeDetails;
 import com.huankong.fictionalfiction.bean.details.BookDetails;
 import com.huankong.fictionalfiction.bean.details.DetailsData;
@@ -12,21 +13,34 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class BookDetailsService {
-    public BookDetails bookDetails(String url) {
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    public BookDetails bookDetails(BookRequestBody bookRequestBody) {
+        String url = bookRequestBody.getUrl();
+
+        String responseString = stringRedisTemplate.opsForValue().get(url);
+        if ("".equals(responseString)) {
+            return new Gson().fromJson(responseString, new TypeToken<BookDetails>() {
+            }.getType());
+        }
+
         // 查询该key是否有对应的小说
         CloseableHttpClient httpClient = HttpClients.createDefault();
         CloseableHttpResponse response = null;
 
-        String responseString = null;
         BookDetails bookDetails = new BookDetails();
 
         RequestConfig config = RequestConfig.custom().setConnectTimeout(3000).
@@ -60,14 +74,27 @@ public class BookDetailsService {
                 bookDetails.getData().setFirstChapterLink("https://quapp.1122dh.com/book/" + biQueGeDetails.getData().getId() + "/" + biQueGeDetails.getData().getFirstChapterId() + ".html");
                 bookDetails.getData().setLastChapterLink("https://quapp.1122dh.com/book/" + biQueGeDetails.getData().getId() + "/" + biQueGeDetails.getData().getLastChapterId() + ".html");
                 bookDetails.getData().setLastChapter(biQueGeDetails.getData().getLastChapter());
-                bookDetails.getData().setLastTime(new SimpleDateFormat("yyyy-MM-dd H:mm:ss").format(new SimpleDateFormat("MM/d/yyyy K:m:s a",Locale.ENGLISH).parse(biQueGeDetails.getData().getLastTime()).getTime()));
+                bookDetails.getData().setLastTime(new SimpleDateFormat("yyyy-MM-dd H:mm:ss").format(new SimpleDateFormat("MM/d/yyyy K:m:s a", Locale.ENGLISH).parse(biQueGeDetails.getData().getLastTime()).getTime()));
                 bookDetails.getData().setcName(biQueGeDetails.getData().getCName());
+
+                // 先将数据保存在缓存中
+                stringRedisTemplate.opsForValue().set(url, new Gson().toJson(bookDetails), 30 * 60, TimeUnit.SECONDS);
+                // 最后返回数据
+                return bookDetails;
+            } else {
+                bookDetails.setData(new DetailsData());
+                bookDetails.setSource(1);
+                bookDetails.setInfo("error");
+
                 return bookDetails;
             }
-        } catch (IOException e) {
+        } catch (ParseException | IOException e) {
             e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
+            bookDetails.setData(new DetailsData());
+            bookDetails.setSource(1);
+            bookDetails.setInfo("error");
+
+            return bookDetails;
         } finally {
             try {
                 if (httpClient != null) {
@@ -80,12 +107,5 @@ public class BookDetailsService {
                 e.printStackTrace();
             }
         }
-
-        bookDetails = new BookDetails();
-        bookDetails.setData(new DetailsData());
-        bookDetails.setSource(1);
-        bookDetails.setInfo(response.toString());
-
-        return bookDetails;
     }
 }
