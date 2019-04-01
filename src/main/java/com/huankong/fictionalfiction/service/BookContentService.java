@@ -49,7 +49,7 @@ public class BookContentService {
         try {
             SearchResult searchResult = jestClient.execute(search);
 
-            if (searchResult.getFirstHit(BookContent.class) != null) {
+            if (searchResult.getResponseCode() == 200 && searchResult.getFirstHit(BookContent.class) != null) {
                 // 如果ES中存在本地数据，则直接返回
                 BookContent bookContent = searchResult.getFirstHit(BookContent.class).source;
                 // 先将数据保存在缓存中
@@ -89,7 +89,7 @@ public class BookContentService {
                 bookContent.setSource(1);
                 bookContent.setInfo(biQueGeContent.getInfo());
                 bookContent.setData(new ContentData());
-                bookContent.getData().setId("https://quapp.1122dh.com/book/" + biQueGeContent.getData().getId() + "/");
+                bookContent.getData().setId("https://quapp.1122dh.com/info/" + biQueGeContent.getData().getId() + ".html");
                 bookContent.getData().setName(biQueGeContent.getData().getName());
                 bookContent.getData().setCid("https://quapp.1122dh.com/book/" + biQueGeContent.getData().getId() + "/" + biQueGeContent.getData().getCid() + ".html");
                 bookContent.getData().setCname(biQueGeContent.getData().getCname());
