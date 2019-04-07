@@ -3,9 +3,12 @@ package com.huankong.fictionalfiction.service;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.huankong.fictionalfiction.bean.BookRequestBody;
+import com.huankong.fictionalfiction.bean.UserBook;
 import com.huankong.fictionalfiction.bean.biquege.content.BiQueGeContent;
 import com.huankong.fictionalfiction.bean.content.BookContent;
 import com.huankong.fictionalfiction.bean.content.ContentData;
+import com.huankong.fictionalfiction.mapper.UserBookMapper;
+import com.huankong.fictionalfiction.mapper.UserMapper;
 import io.searchbox.client.JestClient;
 import io.searchbox.core.Index;
 import io.searchbox.core.Search;
@@ -30,17 +33,34 @@ public class BookContentService {
     StringRedisTemplate stringRedisTemplate;
     @Autowired
     private JestClient jestClient;
+    @Autowired
+    private UserBookMapper userBookMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     public BookContent bookContent(BookRequestBody bookRequestBody) {
+        String username = bookRequestBody.getUsername();
         String name = bookRequestBody.getName();
         String url = bookRequestBody.getUrl();
 
+        BookContent bookContent = new BookContent();
+
         // 先尝试从缓存中获取数据
         String responseString = stringRedisTemplate.opsForValue().get(url);
-        if ("".equals(responseString)) {
+        if (!"".equals(responseString) && responseString != null) {
             // 如果缓存中存在则直接返回
-            return new Gson().fromJson(responseString, new TypeToken<BookContent>() {
+            bookContent = new Gson().fromJson(responseString, new TypeToken<BookContent>() {
             }.getType());
+            // 更新阅读进度
+            String bookid = bookContent.getData().getId();
+            Integer userid = userMapper.getUserByUserName(username).getId();
+            UserBook userBook = new UserBook();
+            userBook.setUserid(userid);
+            userBook.setBookid(bookid);
+            userBook.setProgress(bookContent.getData().getCname());
+            userBook.setProgressLink(bookContent.getData().getCid());
+            userBookMapper.updateUserBook(userBook);
+            return bookContent;
         }
 
         // 再尝试从es中获取数据
@@ -51,9 +71,18 @@ public class BookContentService {
 
             if (searchResult.getResponseCode() == 200 && searchResult.getFirstHit(BookContent.class) != null) {
                 // 如果ES中存在本地数据，则直接返回
-                BookContent bookContent = searchResult.getFirstHit(BookContent.class).source;
+                bookContent = searchResult.getFirstHit(BookContent.class).source;
                 // 先将数据保存在缓存中
                 stringRedisTemplate.opsForValue().set(bookRequestBody.getUrl(), new Gson().toJson(bookContent), 30 * 60, TimeUnit.SECONDS);
+                // 更新阅读进度
+                String bookid = bookContent.getData().getId();
+                Integer userid = userMapper.getUserByUserName(username).getId();
+                UserBook userBook = new UserBook();
+                userBook.setUserid(userid);
+                userBook.setBookid(bookid);
+                userBook.setProgress(bookContent.getData().getCname());
+                userBook.setProgressLink(bookContent.getData().getCid());
+                userBookMapper.updateUserBook(userBook);
                 // 再返回数据
                 return bookContent;
             }
@@ -64,7 +93,7 @@ public class BookContentService {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         CloseableHttpResponse response = null;
 
-        BookContent bookContent = new BookContent();
+        bookContent = new BookContent();
 
         RequestConfig config = RequestConfig.custom().setConnectTimeout(3000).
                 setSocketTimeout(3000).build();
@@ -104,6 +133,15 @@ public class BookContentService {
                     Index index = new Index.Builder(bookContent).index("bookcontent").type(bookContent.getData().getName()).build();
                     jestClient.execute(index);
                 }
+                // 更新阅读进度
+                String bookid = bookContent.getData().getId();
+                Integer userid = userMapper.getUserByUserName(username).getId();
+                UserBook userBook = new UserBook();
+                userBook.setUserid(userid);
+                userBook.setBookid(bookid);
+                userBook.setProgress(bookContent.getData().getCname());
+                userBook.setProgressLink(bookContent.getData().getCid());
+                userBookMapper.updateUserBook(userBook);
                 // 最后返回数据
                 return bookContent;
             } else {

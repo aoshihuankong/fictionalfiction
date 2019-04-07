@@ -14,7 +14,7 @@ public class UserRegisterController {
     @Autowired
     UserRegisterService userRegisterService;
 
-    @PostMapping("/fictionalfiction/register")
+    @PostMapping(value = "/fictionalfiction/register")
     public Map<String, String> userRegister(@RequestBody User user) {
         return userRegisterService.userRegister(user);
     }

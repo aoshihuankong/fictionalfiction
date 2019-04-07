@@ -1,8 +1,20 @@
 package com.huankong.fictionalfiction.bean;
 
+import java.util.List;
+
 public class BookRequestBody {
+    private String username;
     private String name;
     private String url;
+    private List<String> urls;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getName() {
         return name;
@@ -18,5 +30,13 @@ public class BookRequestBody {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public List<String> getUrls() {
+        return urls;
+    }
+
+    public void setUrls(List<String> urls) {
+        this.urls = urls;
     }
 }

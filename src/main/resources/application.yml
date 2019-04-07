@@ -17,6 +17,9 @@ spring:
     # elasticsearch文档数据库配置信息
     jest:
       uris: http://39.108.37.4:9200
+logging:
+  level:
+    com.huankong.fictionalfiction.mapper: debug
 ---
 spring:
   profiles: prd

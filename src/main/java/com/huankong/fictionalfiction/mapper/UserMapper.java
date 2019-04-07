@@ -14,7 +14,7 @@ public interface UserMapper {
     @Update("UPDATE t_user SET username = #{username}, password = #{password}, email = #{email} WHERE id = #{d}")
     public void updateUser(User user);
 
-    @Delete("DELECT FROM t_user WHERE id = #{id}")
+    @Delete("DELETE FROM t_user WHERE id = #{id}")
     public void deleteUserById(Integer id);
 
     @Insert("INSERT INTO t_user(username, password, email) VALUES (#{username}, #{password}, #{email})")
