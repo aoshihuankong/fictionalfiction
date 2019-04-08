@@ -4,6 +4,7 @@ import java.util.List;
 
 public class BookRequestBody {
     private String username;
+    private String email;
     private String name;
     private String url;
     private List<String> urls;
@@ -14,6 +15,14 @@ public class BookRequestBody {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getName() {

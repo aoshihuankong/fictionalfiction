@@ -25,6 +25,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -59,6 +61,7 @@ public class BookContentService {
             userBook.setBookid(bookid);
             userBook.setProgress(bookContent.getData().getCname());
             userBook.setProgressLink(bookContent.getData().getCid());
+            userBook.setProgressTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
             userBookMapper.updateUserBook(userBook);
             return bookContent;
         }
@@ -82,6 +85,7 @@ public class BookContentService {
                 userBook.setBookid(bookid);
                 userBook.setProgress(bookContent.getData().getCname());
                 userBook.setProgressLink(bookContent.getData().getCid());
+                userBook.setProgressTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
                 userBookMapper.updateUserBook(userBook);
                 // 再返回数据
                 return bookContent;
@@ -141,6 +145,7 @@ public class BookContentService {
                 userBook.setBookid(bookid);
                 userBook.setProgress(bookContent.getData().getCname());
                 userBook.setProgressLink(bookContent.getData().getCid());
+                userBook.setProgressTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
                 userBookMapper.updateUserBook(userBook);
                 // 最后返回数据
                 return bookContent;

@@ -78,6 +78,12 @@
             <artifactId>jest</artifactId>
             <version>5.3.4</version>
         </dependency>
+
+        <!--邮件功能依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -97,7 +103,7 @@
                 <version>0.4.13</version>
                 <configuration>
                     <imageName>huankong/${project.artifactId}</imageName>
-                    <dockerDirectory>src/main/docker</dockerDirectory>
+                    <dockerDirectory>./</dockerDirectory>
                     <resources>
                         <resource>
                             <targetPath>/</targetPath>

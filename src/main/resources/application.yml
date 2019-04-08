@@ -17,6 +17,12 @@ spring:
     # elasticsearch文档数据库配置信息
     jest:
       uris: http://39.108.37.4:9200
+  mail:
+    # 邮件发送功能相关配置
+    username: 2669868310@qq.com
+    password: qskebolxewljdijh
+    host: smtp.qq.com
+
 #logging:
 #  level:
 #    com.huankong.fictionalfiction.mapper: debug

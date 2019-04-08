@@ -12,6 +12,7 @@ public class UserBook {
     private String lastTime;
     private String progress;
     private String progressLink;
+    private String progressTime;
 
     public int getId() {
         return id;
@@ -99,5 +100,13 @@ public class UserBook {
 
     public void setProgressLink(String progressLink) {
         this.progressLink = progressLink;
+    }
+
+    public String getProgressTime() {
+        return progressTime;
+    }
+
+    public void setProgressTime(String progressTime) {
+        this.progressTime = progressTime;
     }
 }
