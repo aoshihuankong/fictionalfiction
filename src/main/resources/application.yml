@@ -22,7 +22,19 @@ spring:
     username: 2669868310@qq.com
     password: qskebolxewljdijh
     host: smtp.qq.com
-
+    default-encoding: UTF-8
+    port: 465
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          socketFactory:
+            port: 465
+            class: javax.net.ssl.SSLSocketFactory
+            fallback: false
 #logging:
 #  level:
 #    com.huankong.fictionalfiction.mapper: debug
